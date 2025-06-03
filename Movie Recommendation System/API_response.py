@@ -32,3 +32,4 @@ def Generate_Response(prompt):
 
 # prompt = input("Ask Ai: ")
 # response = Generate_Response(prompt)
+# print(f"AI Response: {response}")
