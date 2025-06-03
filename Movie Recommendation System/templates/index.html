@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">MovieMania</a>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Discover Your Next Favorite Movie</h1>
+            <p>Beyond the Scroll: Find Films You'll Obsess Over</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="alert">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="search-section">
+            <form method="POST" id="movieForm">
+                <label for="movieSearch">Search for a movie you love:</label>
+                <div class="custom-select">
+                    <div class="select-wrapper">
+                        <input type="text" 
+                               id="movieSearch" 
+                               class="search-input" 
+                               placeholder="Type to search movies..."
+                               autocomplete="off">
+                        <div class="options-container">
+                            {% for movie in movies %}
+                                <div class="option" data-value="{{ movie }}">
+                                    {{ movie }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="movie" id="movie" required>
+                    </div>
+                </div>
+                <button type="submit">Get Recommendations</button>
+            </form>
+        </div>
+
+        <div id="loading">
+            <div class="loading-spinner"></div>
+            <p>Finding similar movies you'll love...</p>
+        </div>
+
+        {% if selected_movie %}
+            <div class="recommendations-section">
+                <div class="selected-movie">
+                    <h2>You selected</h2>
+                    <div class="movie-card featured">
+                        <div class="movie-info">
+                            <h3>{{ selected_movie.title }}</h3>
+                            <div class="genres">
+                                {% for genre in selected_movie.genres %}
+                                    <span class="genre-tag">{{ genre }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="cast">
+                                <h4>Starring:</h4>
+                                <div class="cast-list">
+                                    {% for actor in selected_movie.cast %}
+                                        <span class="cast-member">{{ actor }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="overview">{{ selected_movie.overview }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Because you liked "{{ selected_movie.title }}", you might also like:</h2>
+                <div class="recommendations-grid">
+                    {% for movie in recommendations %}
+                        <div class="movie-card">
+                            <div class="movie-info">
+                                <h3>{{ movie.title }}</h3>
+                                <div class="genres">
+                                    {% for genre in movie.genres %}
+                                        <span class="genre-tag">{{ genre }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="cast">
+                                    <h4>Starring:</h4>
+                                    <div class="cast-list">
+                                        {% for actor in movie.cast %}
+                                            <span class="cast-member">{{ actor }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="overview-container">
+                                    <p class="overview">{{ movie.overview }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Movies Recommendations</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
