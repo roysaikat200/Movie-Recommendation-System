@@ -1,3 +1,5 @@
 venv
 *.csv
 *.pkl
+.env
+__pycache__
